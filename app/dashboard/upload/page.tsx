@@ -15,5 +15,6 @@ export default function UploadPage() {
         <SuccessCard hash={resultHash} onReset={() => setResultHash(null)} />
       )}
     </div>
+    
   );
 }
