@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { submitNewEvent } from "@/lib/EthersService";
 
 /**
  * UploadEvidenceForm
@@ -149,17 +150,17 @@ export default function UploadEvidenceForm({ onSuccess }: Props) {
     setSubmitting(true);
 
     try {
-      // simulate upload + onchain registration
-      // In production, replace with actual multipart upload + chain tx
-      await new Promise((r) => setTimeout(r, 1100 + Math.random() * 800));
+      // In a real app, you would first upload files to a service like IPFS/S3
+      // and get back URLs or content identifiers (CIDs).
 
-      // Generate a secure-ish random hex hash (mock)
-      const arr = new Uint8Array(16);
-      crypto.getRandomValues(arr);
-      const hash = "0x" + Array.from(arr).map((b) => b.toString(16).padStart(2, "0")).join("");
+      // For now, we'll create FormData and pass it to our mock service.
+      const formData = new FormData();
+      formData.append("caseId", caseId);
+      formData.append("description", description);
+      formData.append("gps", gps);
+      files.forEach((f) => formData.append("files", f.file, f.file.name));
 
-      // Optionally: upload files to server / IPFS here...
-
+      const hash = await submitNewEvent(formData);
       onSuccess(hash);
       clearAll();
     } catch (err) {
